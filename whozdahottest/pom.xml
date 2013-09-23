@@ -9,7 +9,7 @@
   <url>http://maven.apache.org</url>
   
 	<properties>
-		<spring.version>3.0.5.RELEASE</spring.version>
+		<spring.version>3.0.6.RELEASE</spring.version>
 		<junit.version>4.11</junit.version>
 		<jdk.version>1.7</jdk.version>
 	</properties>
@@ -77,6 +77,20 @@
 			<artifactId>spring-security-config</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		
+		<!-- MySQL database driver -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.9</version>
+		</dependency>
+		
   </dependencies>
   
   <build>

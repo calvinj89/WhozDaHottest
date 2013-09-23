@@ -8,16 +8,21 @@
  
 	<http auto-config="true">
 		<intercept-url pattern="/welcome*" access="ROLE_USER" />
-		<form-login login-page="/login" default-target-url="/welcome" authentication-failure-url="/loginfailed" />
+		<form-login login-page="/login" default-target-url="/welcome" authentication-failure-url="/login" />
 		<logout logout-success-url="/logout" />
 	</http>
  
 	<authentication-manager>
-	  <authentication-provider>
-		<user-service>
-			<user name="cjones" password="password" authorities="ROLE_USER" />
-		</user-service>
-	  </authentication-provider>
-	</authentication-manager>
- 
+        <authentication-provider>
+          <jdbc-user-service data-source-ref="dataSource" 
+         	  users-by-username-query="
+              select username,password, enabled 
+              from users where username=?" 
+           authorities-by-username-query="
+              select u.username, ur.authority from users u, user_roles ur 
+              where u.user_id = ur.user_id and u.username=?" 
+             />
+        </authentication-provider>
+    </authentication-manager>
+
 </beans:beans>
