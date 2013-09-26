@@ -15,12 +15,18 @@ public class LoginController {
 		return "login";
  	}
 	
+	@RequestMapping(value="/loginFailed", method = RequestMethod.GET)
+	public String loginFailed(ModelMap model) {
+		model.addAttribute("error", "true");
+		return "login";
+ 	}
+	
 	@RequestMapping(value="/welcome", method = RequestMethod.GET)
 	public String printWelcome(ModelMap model) {
  
 		model.addAttribute("message", "Spring 3 MVC Hello World");
 		return "welcome";
-		//return "redirect:/views/hello.html";
+		
 	}
  
 }
