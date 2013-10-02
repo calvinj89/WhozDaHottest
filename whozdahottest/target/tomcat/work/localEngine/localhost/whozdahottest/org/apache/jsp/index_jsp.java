@@ -53,6 +53,7 @@ public final class index_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("<html>\n");
       out.write("\t<body>\n");
       out.write("\t\t<h2>Welcome to WhozDaHottest!!! index.html</h2>\n");
+      out.write("\t\t<a href=\"registrationForm\">Constest Registration</a>\n");
       out.write("\t</body>\n");
       out.write("</html>\n");
     } catch (Throwable t) {
