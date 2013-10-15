@@ -1,4 +1,4 @@
-package com.whozdahottest.form;
+package com.whozdahottest.models;
 
 public class Video {
 

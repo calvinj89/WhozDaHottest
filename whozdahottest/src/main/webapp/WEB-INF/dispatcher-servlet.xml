@@ -12,7 +12,7 @@
         ">
 
 	<context:annotation-config/>
-	<context:component-scan base-package="com.whozdahottest.controller"/>
+	<context:component-scan base-package="com.whozdahottest.controllers"/>
 	
 	<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 	    <property name="prefix" value="/WEB-INF/views/"/>
@@ -25,6 +25,22 @@
 		<property name="username" value="root" />
 		<property name="password" value="meyaka12" />
 	</bean>
+	
+	<!-- Definition for UserExist bean -->
+   <bean id="userExist" class="com.whozdahottest.services.UserExist">
+      <property name="dataSource"  ref="dataSource" />    
+   </bean>
+	
+	<bean id="fileValidator" class="com.whozdahottest.services.FileValidator">
+		 <property name="fileType">
+            <list>
+                <value>"mpeg"</value>
+                <value>"avi"</value>
+           </list>
+        </property>
+	</bean>  
+  
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />  
 	
 	<!-- 
 	<mvc:resources mapping="/views/**" location="/WEB-INF/views/" />

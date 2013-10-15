@@ -1,0 +1,10 @@
+com\whozdahottest\models\UploadedFile.class
+com\whozdahottest\services\EmailService.class
+com\whozdahottest\services\UserExist.class
+com\whozdahottest\models\User.class
+com\whozdahottest\controllers\LoginController.class
+com\whozdahottest\services\FileValidator.class
+com\whozdahottest\models\Contestant.class
+com\whozdahottest\models\Video.class
+com\whozdahottest\models\UserRole.class
+com\whozdahottest\controllers\RegistrationController.class

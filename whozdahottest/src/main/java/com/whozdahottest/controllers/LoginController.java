@@ -1,4 +1,4 @@
-package com.whozdahottest.controller;
+package com.whozdahottest.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -10,7 +10,6 @@ public class LoginController {
  	
 	@RequestMapping(value="/login", method = RequestMethod.GET)
 	public String login(ModelMap model) {
- 
 		return "login";
  	}
 	
