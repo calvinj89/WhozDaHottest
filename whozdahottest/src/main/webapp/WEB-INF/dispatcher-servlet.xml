@@ -40,10 +40,10 @@
         </property>
 	</bean>  
   
-	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />  
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" /> 
+	<mvc:annotation-driven/> 
 	
 	<!-- 
-	<mvc:resources mapping="/views/**" location="/WEB-INF/views/" />
-	<mvc:annotation-driven/>
+		<mvc:resources mapping="/views/**" location="/WEB-INF/views/" />
 	-->
 </beans>

@@ -6,11 +6,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,6 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.whozdahottest.models.Contestant;
 import com.whozdahottest.services.FileValidator;
 import com.whozdahottest.services.UserExist;
+
 
 @Controller
 public class RegistrationController {
@@ -29,22 +32,40 @@ public class RegistrationController {
 	@Autowired  
 	FileValidator fileValidator;  
 	
+	ModelAndView modelAndView = null;
+	
+	/**
+	 * 
+	 */
 	public RegistrationController(){
-		
+		//Constructor
 	}
 	
+	/**
+	 * 
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping(value="registrationForm", method=RequestMethod.GET)
-	public ModelAndView  loadFormPage(@ModelAttribute("contestant") Contestant contestant, Model model) {
-		model.addAttribute("constestant", new Contestant());
-		return new ModelAndView("registration");  
+	public String  loadFormPage(ModelMap  model) {
+		
+		model.addAttribute("contestant", new Contestant());
+		return "registration";
 	}
 	
+	/**
+	 * 
+	 * @param contestant
+	 * @param result
+	 * @return
+	 */
 	@RequestMapping(value="registrationForm", method=RequestMethod.POST)
-	public ModelAndView submitForm(@ModelAttribute("contestant") Contestant contestant, BindingResult result) {
+	public String submitForm(@Valid Contestant contestant, BindingResult result) {
 		
 		if (userExist == null){
 			userExist = new UserExist();
 		}
+		
 		
 		if (userExist.checkUserExist(contestant.getUserName())){
 			result.getFieldError("User Already exist");
@@ -60,13 +81,13 @@ public class RegistrationController {
 				  
 		MultipartFile file = contestant.getFile();  
 		fileValidator.validate(contestant, result);  
-				
-		String fileName = file.getOriginalFilename();  
-		  
-		
-		if (result.hasErrors()) {  
-		   //return new ModelAndView("uploadForm");  
+	
+		if (result.hasErrors()) { 
+			System.out.println("Result Error " + result.getObjectName() + " to string " + result.toString());
+			return "registration";  
 		}  
+		
+		String fileName = file.getOriginalFilename(); 
 		
 		try {  
 			  
@@ -83,14 +104,25 @@ public class RegistrationController {
 			byte[] bytes = new byte[1024];  
 				  
 			while ((read = inputStream.read(bytes)) != -1) {  
-			outputStream.write(bytes, 0, read);  
-			   }  
+				outputStream.write(bytes, 0, read);  
+			}  
+			
 		} catch (IOException e) {  
 			// TODO Auto-generated catch block  
 			e.printStackTrace();  
 		}  
 		
-		return new ModelAndView("registration");
+		 modelAndView = new ModelAndView("registrationConfirmation");
+		 modelAndView.addObject("userName", contestant.getUserName());
+		 modelAndView.addObject("stageName", contestant.getStageName());
+		 modelAndView.addObject("whoOrWhereURepresent", contestant.getWhoOrWhereURepresent());
+		 modelAndView.addObject("bio", contestant.getBio());
+		 modelAndView.addObject("twitter", contestant.getTwitter());
+		 modelAndView.addObject("instagram", contestant.getInstagram());
+		 modelAndView.addObject("facebook", contestant.getFacebook());
+		 modelAndView.addObject("googlePlus", contestant.getGooglePlus());
+		
+		return "registrationConfirmation";
 	}
 
 }

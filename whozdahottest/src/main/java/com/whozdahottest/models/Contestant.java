@@ -3,9 +3,6 @@ package com.whozdahottest.models;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.Email; 
-
-
-
 import org.springframework.web.multipart.MultipartFile;
 
 public class Contestant {
@@ -24,26 +21,35 @@ public class Contestant {
 	
 	@NotNull
     @Size(min=1,max=20)
-	private String userID                = null;
-	
-	@NotNull
-    @Size(min=1,max=20)
 	private String stageName             = null;
 	
 	@Email
 	private String email                 = null;
 	
-	
+	@NotNull
+    @Size(min=0,max=255)
 	private String whoOrWhereURepresent  = null;
+	
+	@NotNull
+    @Size(min=0,max=20)
 	private String bio                   = null;
+	
+	@NotNull
+    @Size(min=0,max=20)
 	private String twitter               = null;
+	
 	private String instagram             = null;
+	
 	private String facebook              = null;
+	
+	
 	private String googlePlus            = null;
+	
 	private User   user                  = null;
+	private String userID                = null;
 	private int    numberOfVotes         = 0;
-	private MultipartFile file   = null;  
-	private int    numberOfWeeksConstestantWon = 0;
+	private MultipartFile file           = null;  
+	private int numberOfWeeksConstestantWon = 0;
 	
 	/**
 	 * 
@@ -298,7 +304,23 @@ public class Contestant {
 	 */
 	public void setFile(MultipartFile file) {  
 		this.file = file;  
+	} 
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public int getNumberOfWeeksConstestantWon() {  
+		return numberOfWeeksConstestantWon;  
 	}  
+	  
+	/**
+	 * 
+	 * @param numberOfWeeksConstestantWon
+	 */
+	public void setFile(int numberOfWeeksConstestantWon) {  
+		this.numberOfWeeksConstestantWon = numberOfWeeksConstestantWon;  
+	} 
 
 	
 }
