@@ -10,27 +10,35 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.whozdahottest.models.Contestant;
+import com.whozdahottest.models.States;
+import com.whozdahottest.models.StatusResponse;
 import com.whozdahottest.services.FileValidator;
-import com.whozdahottest.services.UserExist;
+import com.whozdahottest.validation.RegistrationValidation;
 
 
 @Controller
 public class RegistrationController {
 	
-	@Autowired
-	private UserExist userExist;
 	
 	@Autowired  
-	FileValidator fileValidator;  
+	FileValidator fileValidator; 
+	
+	
+	@Autowired
+    private RegistrationValidation registrationValidation;
+	
 	
 	ModelAndView modelAndView = null;
 	
@@ -47,12 +55,40 @@ public class RegistrationController {
 	 * @return
 	 */
 	@RequestMapping(value="registrationForm", method=RequestMethod.GET)
-	public String  loadFormPage(ModelMap  model) {
+	public String  loadFormPage(ModelMap model) {
 		
-		model.addAttribute("contestant", new Contestant());
-		return "registration";
+		 model.addAttribute("statesMap", States.getStates());
+		 model.addAttribute("contestant", new Contestant());
+		 return "registration";
 	}
 	
+	
+	/**
+	 * 
+	 * @param file
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value="Upload", method=RequestMethod.POST)
+	public @ResponseBody String fileUpload(@RequestParam("file") MultipartFile file, ModelMap model) {
+		
+		Contestant contestant = new Contestant();
+		contestant.setFile(file);
+		BindingResult result = new BeanPropertyBindingResult(contestant, "contestant");
+		fileValidator.validate(contestant, result ); 
+		
+		if (result.hasErrors()) { 
+			FieldError error = result.getFieldError();
+		    
+			if(error.toString().contains("File is not valid format")){
+		    	return "File is not valid format";  
+		    }
+			
+		}  
+		
+		return "success";
+	}
+
 	/**
 	 * 
 	 * @param contestant
@@ -61,20 +97,8 @@ public class RegistrationController {
 	 */
 	@RequestMapping(value="registrationForm", method=RequestMethod.POST)
 	public String submitForm(@Valid Contestant contestant, BindingResult result) {
-		
-		if (userExist == null){
-			userExist = new UserExist();
-		}
-		
-		
-		if (userExist.checkUserExist(contestant.getUserName())){
-			result.getFieldError("User Already exist");
-		}
-		
-		if (contestant.getPassword().equals(contestant.getPasswordConfirmation())){
-			result.getFieldError("Password doesn't match");
-		}
-		
+					
+		registrationValidation.validate(contestant, result);
 		
 		InputStream inputStream = null;  
 		OutputStream outputStream = null;  
@@ -83,7 +107,6 @@ public class RegistrationController {
 		fileValidator.validate(contestant, result);  
 	
 		if (result.hasErrors()) { 
-			System.out.println("Result Error " + result.getObjectName() + " to string " + result.toString());
 			return "registration";  
 		}  
 		
@@ -111,16 +134,16 @@ public class RegistrationController {
 			// TODO Auto-generated catch block  
 			e.printStackTrace();  
 		}  
-		
+				
 		 modelAndView = new ModelAndView("registrationConfirmation");
 		 modelAndView.addObject("userName", contestant.getUserName());
 		 modelAndView.addObject("stageName", contestant.getStageName());
 		 modelAndView.addObject("whoOrWhereURepresent", contestant.getWhoOrWhereURepresent());
-		 modelAndView.addObject("bio", contestant.getBio());
+		 modelAndView.addObject("facebook", contestant.getFacebook());
 		 modelAndView.addObject("twitter", contestant.getTwitter());
 		 modelAndView.addObject("instagram", contestant.getInstagram());
-		 modelAndView.addObject("facebook", contestant.getFacebook());
 		 modelAndView.addObject("googlePlus", contestant.getGooglePlus());
+		
 		
 		return "registrationConfirmation";
 	}

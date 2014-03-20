@@ -8,47 +8,47 @@ import org.springframework.web.multipart.MultipartFile;
 public class Contestant {
 	
 	@NotNull
-    @Size(min=1,max=20)
-	private String userName              = null;
+    @Size(min=1, max=20)
+	private String userName                 = null;
 	
 	@NotNull
-    @Size(min=1,max=20)
-	private String password              = null;
+    @Size(min=1, max=20)
+	private String password                 = null;
 	
 	@NotNull
-    @Size(min=1,max=20)
-	private String passwordConfirmation  = null;
+    @Size(min=1, max=20)
+	private String passwordConfirmation     = null;
 	
 	@NotNull
-    @Size(min=1,max=20)
-	private String stageName             = null;
+    @Size(min=1, max=20)
+	private String stageName                = null;
 	
 	@Email
-	private String email                 = null;
+	private String email                    = null;
 	
 	@NotNull
-    @Size(min=0,max=255)
-	private String whoOrWhereURepresent  = null;
+    @Size(min=0, max=255)
+	private String whoOrWhereURepresent     = null;
 	
 	@NotNull
-    @Size(min=0,max=20)
-	private String bio                   = null;
+    @Size(min=0, max=20)
+	private String twitter                  = null;
 	
-	@NotNull
-    @Size(min=0,max=20)
-	private String twitter               = null;
+	private String instagram                = null;
 	
-	private String instagram             = null;
-	
-	private String facebook              = null;
+	private String facebook                 = null;
 	
 	
-	private String googlePlus            = null;
+	private String googlePlus               = null;
 	
-	private User   user                  = null;
-	private String userID                = null;
-	private int    numberOfVotes         = 0;
-	private MultipartFile file           = null;  
+	private String state                    = null;
+	
+	private String city                     = null;
+	
+	private User   user                     = null;
+	private String userID                   = null;
+	private int    numberOfVotes            = 0;
+	private MultipartFile file              = null;  
 	private int numberOfWeeksConstestantWon = 0;
 	
 	/**
@@ -110,7 +110,7 @@ public class Contestant {
 	 * 
 	 * @param password
 	 */
-	public void setPasswordConfirmation(String password) {
+	public void setPasswordConfirmation(String passwordConfirmation) {
 		this.passwordConfirmation = passwordConfirmation;
 	}
 
@@ -178,22 +178,7 @@ public class Contestant {
 		this.whoOrWhereURepresent = whoOrWhereURepresent;
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
-	public String getBio() {
-		return bio;
-	}
-
-	/**
-	 * 
-	 * @param bio
-	 */
-	public void setBio(String bio) {
-		this.bio = bio;
-	}
-	
+		
 	/**
 	 * 
 	 * @return
@@ -308,19 +293,59 @@ public class Contestant {
 	
 	/**
 	 * 
-	 * @return
-	 */
-	public int getNumberOfWeeksConstestantWon() {  
-		return numberOfWeeksConstestantWon;  
-	}  
-	  
-	/**
-	 * 
 	 * @param numberOfWeeksConstestantWon
 	 */
 	public void setFile(int numberOfWeeksConstestantWon) {  
 		this.numberOfWeeksConstestantWon = numberOfWeeksConstestantWon;  
 	} 
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public String getState() {
+		return state;
+	}
+
+	/**
+	 * 
+	 * @param state
+	 */
+	public void setState(String state) {
+		this.state = state;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public String getCity() {
+		return city;
+	}
+
+	/**
+	 * 
+	 * @param city
+	 */
+	public void setCity(String city) {
+		this.city = city;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public int getNumberOfWeeksConstestantWon() {  
+		return numberOfWeeksConstestantWon;  
+	}  
+	
+	/**
+	 * 
+	 * @param numberOfWeeksConstestantWon
+	 */
+	public void setNumberOfWeeksConstestantWon(int numberOfWeeksConstestantWon) {
+		this.numberOfWeeksConstestantWon = numberOfWeeksConstestantWon;
+	}
 
 	
 }
