@@ -50,7 +50,25 @@ public class Contestant {
 	private int    numberOfVotes            = 0;
 	private MultipartFile file              = null;  
 	private int numberOfWeeksConstestantWon = 0;
+	private String isFileLoaded = "false";
+	private String fileName = null;
 	
+	/**
+	 * 
+	 * @return
+	 */
+	public String getFileName() {
+		return fileName;
+	}
+
+	/**
+	 * 
+	 * @param fileName
+	 */
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
 	/**
 	 * 
 	 */
@@ -346,6 +364,23 @@ public class Contestant {
 	public void setNumberOfWeeksConstestantWon(int numberOfWeeksConstestantWon) {
 		this.numberOfWeeksConstestantWon = numberOfWeeksConstestantWon;
 	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public String getIsFileLoaded() {
+		return isFileLoaded;
+	}
+
+	/**
+	 * 
+	 * @param isFileLoaded
+	 */
+	public void setIsFileLoaded(String isFileLoaded) {
+		this.isFileLoaded = isFileLoaded;
+	}
+
 
 	
 }

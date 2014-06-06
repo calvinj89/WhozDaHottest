@@ -1,5 +1,6 @@
 com\whozdahottest\services\UserExist.class
 com\whozdahottest\controllers\LoginController.class
+com\whozdahottest\models\FileResponse.class
 com\whozdahottest\models\UserRole.class
 com\whozdahottest\models\Video.class
 com\whozdahottest\models\States.class

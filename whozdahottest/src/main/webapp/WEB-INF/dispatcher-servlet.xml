@@ -42,15 +42,17 @@
 	<bean id="fileValidator" class="com.whozdahottest.services.FileValidator">
 		 <property name="fileType">
             <list>
-                <value>"mpeg"</value>
-                <value>"avi"</value>
-           </list>
+                <value>.mpeg</value>
+                <value>.avi</value>
+                <value>.jpg</value>
+                <value>.gif</value>
+            </list>
         </property>
 	</bean>  
   
 	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" /> 
 	<mvc:annotation-driven/> 
-	
+	<mvc:resources mapping="/images/**" location="/WEB-INF/images/" />
 	<!-- 
 		<mvc:resources mapping="/views/**" location="/WEB-INF/views/" />
 	-->

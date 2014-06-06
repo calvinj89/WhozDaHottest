@@ -22,8 +22,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.whozdahottest.models.Contestant;
+import com.whozdahottest.models.FileResponse;
 import com.whozdahottest.models.States;
-import com.whozdahottest.models.StatusResponse;
 import com.whozdahottest.services.FileValidator;
 import com.whozdahottest.validation.RegistrationValidation;
 
@@ -70,9 +70,10 @@ public class RegistrationController {
 	 * @return
 	 */
 	@RequestMapping(value="Upload", method=RequestMethod.POST)
-	public @ResponseBody String fileUpload(@RequestParam("file") MultipartFile file, ModelMap model) {
+	public @ResponseBody FileResponse fileUpload(@RequestParam("file") MultipartFile file, ModelMap model) {
 		
 		Contestant contestant = new Contestant();
+		FileResponse response = new FileResponse();
 		contestant.setFile(file);
 		BindingResult result = new BeanPropertyBindingResult(contestant, "contestant");
 		fileValidator.validate(contestant, result ); 
@@ -81,12 +82,16 @@ public class RegistrationController {
 			FieldError error = result.getFieldError();
 		    
 			if(error.toString().contains("File is not valid format")){
-		    	return "File is not valid format";  
+		    	response.setStatus("File is not valid format");
+				return response;  
 		    }
 			
 		}  
 		
-		return "success";
+	    response.setFileName(contestant.getFile().getOriginalFilename());
+		writeVideoFileToServer(contestant);
+		response.setStatus("success");
+		return response;
 	}
 
 	/**
@@ -100,19 +105,39 @@ public class RegistrationController {
 					
 		registrationValidation.validate(contestant, result);
 		
-		InputStream inputStream = null;  
-		OutputStream outputStream = null;  
-				  
-		MultipartFile file = contestant.getFile();  
-		fileValidator.validate(contestant, result);  
-	
+		//This logic is for the drag and drop 
+		//If the file name is null and and equal to blank
+		//then the file is not dragged & dropped
+		if(contestant.getFileName() == null && contestant.getFileName().equals("")){
+			fileValidator.validate(contestant, result);  
+			writeVideoFileToServer(contestant);
+		}
+				
 		if (result.hasErrors()) { 
 			return "registration";  
 		}  
+		 modelAndView = new ModelAndView("registrationConfirmation");
+		 modelAndView.addObject("userName", contestant.getUserName());
+		 modelAndView.addObject("stageName", contestant.getStageName());
+		 modelAndView.addObject("whoOrWhereURepresent", contestant.getWhoOrWhereURepresent());
+		 modelAndView.addObject("facebook", contestant.getFacebook());
+		 modelAndView.addObject("twitter", contestant.getTwitter());
+		 modelAndView.addObject("instagram", contestant.getInstagram());
+		 modelAndView.addObject("googlePlus", contestant.getGooglePlus());
+		
+		
+		return "registrationConfirmation";
+	}
+	
+	private String writeVideoFileToServer(Contestant contestant){
+	
+		InputStream inputStream = null;  
+		OutputStream outputStream = null;  
+		MultipartFile file = contestant.getFile();  		
 		
 		String fileName = file.getOriginalFilename(); 
 		
-		try {  
+		try{  
 			  
 			inputStream = file.getInputStream();  
 				  
@@ -134,18 +159,8 @@ public class RegistrationController {
 			// TODO Auto-generated catch block  
 			e.printStackTrace();  
 		}  
-				
-		 modelAndView = new ModelAndView("registrationConfirmation");
-		 modelAndView.addObject("userName", contestant.getUserName());
-		 modelAndView.addObject("stageName", contestant.getStageName());
-		 modelAndView.addObject("whoOrWhereURepresent", contestant.getWhoOrWhereURepresent());
-		 modelAndView.addObject("facebook", contestant.getFacebook());
-		 modelAndView.addObject("twitter", contestant.getTwitter());
-		 modelAndView.addObject("instagram", contestant.getInstagram());
-		 modelAndView.addObject("googlePlus", contestant.getGooglePlus());
 		
-		
-		return "registrationConfirmation";
+		return null;
 	}
 
 }

@@ -3,12 +3,12 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> 
 
 <head>
-
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <style>
 	#dragandrophandler
 	{
 		border:2px dotted #0B85A1;
+		height: 150px;
 		width:400px;
 		color:#92AAB0;
 		text-align:left;vertical-align:middle;
@@ -84,6 +84,14 @@
 		padding: 8px;
 		margin: 16px;
 	}
+	
+	#error1
+	{
+		padding-top:0px;
+		padding-bottom:25px;
+		padding-right:5px;
+		padding-left:5px;
+	}
 </style>
 </head>
 
@@ -91,7 +99,7 @@
 	<body>
 		
 		<h1> WhozDaHottest Contestant Registration </h1>	
-		
+		 Web Application Context Path = ${pageContext.request.contextPath}
 		<form:form method="post" action="registrationForm" commandName="contestant"  enctype="multipart/form-data">
 			
 			 <table > 
@@ -118,10 +126,11 @@
 					</tr> 
 					<tr>
 						<td>The state you represent:</td>
-						<td><form:select path="state">
-					  	<form:option value="NONE" label="--- Select ---" />
-					  	<form:options items="${statesMap}" />
-				       	</form:select>
+						<td>
+							<form:select path="state">
+					  		<form:option value="NONE" label="--- Select ---" />
+					  		<form:options items="${statesMap}" />
+				       		</form:select>
                         </td>
 						<td><form:errors path="state" cssClass="error" /></td>
 					</tr>
@@ -160,6 +169,10 @@
     					<td><form:input type="file"  path="file" /></td>
      					<td style="color: red; font-style: italic;"><form:errors path="file" /></td>
      				</tr>  
+     				<tr>
+     					<form:hidden path="isFileLoaded" value="false"/>
+     					<form:hidden path="fileName" value=""/>
+     				</tr>
 				</tbody>
 			</table>
 			
@@ -168,50 +181,67 @@
 					<td>
 						<div id="dragandrophandler">Drag & Drop Files Here</div>
 					</td>
-					<td>
-						<div id="error1" align="center"></div>	
+					<td >
+						<p id="error1" ></p>	
 					</td>
 				</tr>
 				<tr align="center">
 					<td>
 						<div id="status1" ></div>	
 					</td>
+					<td>
+						<img src="/images/duke_ellington.jpg" alt="Smiley face">
+					</td>
+					<td>
+						<img src="${pageContext.request.contextPath}/images/duke_ellington.jpg" alt="Smiley face">
+					</td>
 				</tr>
 			</table>
-			<input type="submit" value="Submit" /> 
+			<input type="image" src="/resources/images/duke_ellington.jpg" alt="Submit" >
+			 
 		</form:form>
 		
 		<script>
-			function sendFileToServer(formData,status)
+			function sendFileToServer(formData, status)
 			{
 			    var uploadURL ="Upload"; //Upload URL
 			    var extraData ={}; //Extra Data.
 			    var jqXHR=$.ajax({
 			            xhr: function() {
-			            var xhrobj = $.ajaxSettings.xhr();
-			            if (xhrobj.upload) {
-			                    xhrobj.upload.addEventListener('progress', function(event) {
-			                        var percent = 0;
-			                        var position = event.loaded || event.position;
-			                        var total = event.total;
-			                        if (event.lengthComputable) {
-			                            percent = Math.ceil(position / total * 100);
-			                        }
-			                        //Set progress
-			                        status.setProgress(percent);
-			                    }, false);
-			                }
-			            return xhrobj;
-			        },
+				            var xhrobj = $.ajaxSettings.xhr();
+				            if (xhrobj.upload) {
+				                    xhrobj.upload.addEventListener('progress', function(event) {
+				                        var percent = 0;
+				                        var position = event.loaded || event.position;
+				                        var total = event.total;
+				                        if (event.lengthComputable) {
+				                            percent = Math.ceil(position / total * 100);
+				                        }
+				                        //Set progress
+				                        status.setProgress(percent);
+				                    }, false);
+				                }
+				            return xhrobj;
+				        },
 			    url: uploadURL,
 			    type: "POST",
-			    contentType:false,
+			    contentType: false,
 			    processData: false,
 			        cache: false,
 			        data: formData,
+			        dataType: 'json',
 			        success: function(response){
 				        status.setProgress(100);
-			            $("#error1").append(response);         
+				        $("#error1").empty();
+			            $("#error1").append(response); 
+						$("#dragandrophandler").empty();
+						$("#dragandrophandler").append("File Uploaded " + response.fileName)
+						if( response.status == 'success'){
+							$("#isFileLoaded").val("true");
+							$("#fileName").val(response.fileName);
+						}else{
+					    	 $("#isFileLoaded").val("false");       
+					    }
 			        },
 					error: function(data){
 				        $("#status1").append("File upload Error<br>");         
@@ -224,6 +254,9 @@
 			var rowCount=0;
 			function createStatusbar(obj)
 			{
+				 $( ".filename" ).empty();
+				 $( ".filesize" ).empty();
+				 $( ".progressBar" ).empty();
 			     rowCount++;
 			     var row="odd";
 			     if(rowCount %2 ==0) row ="even";
